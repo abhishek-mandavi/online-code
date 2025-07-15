@@ -6,6 +6,7 @@ import {
   ClerkProvider
 } from '@clerk/nextjs';
 
+import Footer from "@/components/Footer";
 import ConvexClientProvider from "@/components/providers/ConvexClientProvider";
 
 const geistSans = Geist({
@@ -31,10 +32,15 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <body 
+         className={`${geistSans.variable} ${geistMono.variable} antialiased
+         min-h-screen bg-gradient-to-b from-gray-900 to-gray-950 text-gray-100 flex flex-col`}
+        >
           <ConvexClientProvider>
             {children}
           </ConvexClientProvider>
+
+          <Footer />
         </body>
       </html>
     </ClerkProvider>
