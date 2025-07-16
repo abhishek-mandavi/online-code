@@ -7,7 +7,7 @@ import Link from "next/link";
 import HeaderProfileBtn from "./HeaderProfileBtn";
 import LanguageSelector from "./LanguageSelector";
 import RunButton from "./RunButton";
-import ThemeSelector from "./ThemeSelector";
+//import ThemeSelector from "./ThemeSelector";
 
 async function Header() {
 
@@ -75,7 +75,7 @@ async function Header() {
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3">
-            <ThemeSelector />
+            
             <LanguageSelector hasAccess={Boolean(convexUser?.isPro)} />
           </div>
 
