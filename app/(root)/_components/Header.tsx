@@ -7,10 +7,9 @@ import Link from "next/link";
 import HeaderProfileBtn from "./HeaderProfileBtn";
 import LanguageSelector from "./LanguageSelector";
 import RunButton from "./RunButton";
-//import ThemeSelector from "./ThemeSelector";
+import ThemeSelector from "./ThemeSelector";
 
 async function Header() {
-
   const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
   const user = await currentUser();
 
@@ -18,8 +17,7 @@ async function Header() {
     userId: user?.id || "",
   });
 
-
-  return(
+  return (
     <div className="relative z-10">
       <div
         className="flex items-center lg:justify-between justify-center 
@@ -27,6 +25,7 @@ async function Header() {
       >
         <div className="hidden lg:flex items-center gap-8">
           <Link href="/" className="flex items-center gap-3 group relative">
+            {/* Logo hover effect */}
 
             <div
               className="absolute -inset-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg opacity-0 
@@ -43,10 +42,10 @@ async function Header() {
 
             <div className="flex flex-col">
               <span className="block text-lg font-semibold bg-gradient-to-r from-blue-400 via-blue-300 to-purple-400 text-transparent bg-clip-text">
-                CODE-IT
+                CodeCraft
               </span>
               <span className="block text-xs text-blue-400/60 font-medium">
-                Best Online Code Editor
+                Interactive Code Editor
               </span>
             </div>
           </Link>
@@ -75,7 +74,7 @@ async function Header() {
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3">
-            
+            <ThemeSelector />
             <LanguageSelector hasAccess={Boolean(convexUser?.isPro)} />
           </div>
 
@@ -105,5 +104,4 @@ async function Header() {
     </div>
   );
 }
-
-export default Header
+export default Header;
