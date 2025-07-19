@@ -1,10 +1,9 @@
 import { LANGUAGE_CONFIG } from "@/app/(root)/_constants";
-import { Monaco } from "@monaco-editor/react";
+import type { editor as MonacoEditor } from "monaco-editor"; // ✅ Correct import
 import { create } from "zustand";
-import { CodeEditorState } from "./../types/index";
+import type { CodeEditorState } from "./../types/index";
 
 const getInitialState = () => {
-  // if we're on the server, return default values
   if (typeof window === "undefined") {
     return {
       language: "javascript",
@@ -13,7 +12,6 @@ const getInitialState = () => {
     };
   }
 
-  // if we're on the client, return values from local storage bc localStorage is a browser API.
   const savedLanguage = localStorage.getItem("editor-language") || "javascript";
   const savedTheme = localStorage.getItem("editor-theme") || "vs-dark";
   const savedFontSize = localStorage.getItem("editor-font-size") || 16;
@@ -38,10 +36,11 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
 
     getCode: () => get().editor?.getValue() || "",
 
-    setEditor: (editor: Monaco) => {
+    setEditor: (editor: MonacoEditor.IStandaloneCodeEditor) => {
       const savedCode = localStorage.getItem(`editor-code-${get().language}`);
-      if (savedCode) editor.setValue(savedCode);
-
+      if (savedCode) {
+        editor.setValue(savedCode); // ✅ No error now
+      }
       set({ editor });
     },
 
@@ -56,14 +55,11 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
     },
 
     setLanguage: (language: string) => {
-      // Save current language code before switching
       const currentCode = get().editor?.getValue();
       if (currentCode) {
         localStorage.setItem(`editor-code-${get().language}`, currentCode);
       }
-
       localStorage.setItem("editor-language", language);
-
       set({
         language,
         output: "",
@@ -98,15 +94,11 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
 
         const data = await response.json();
 
-        console.log("data back from piston:", data);
-
-        // handle API-level erros
         if (data.message) {
           set({ error: data.message, executionResult: { code, output: "", error: data.message } });
           return;
         }
 
-        // handle compilation errors
         if (data.compile && data.compile.code !== 0) {
           const error = data.compile.stderr || data.compile.output;
           set({
@@ -133,7 +125,6 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
           return;
         }
 
-        // if we get here, execution was successful
         const output = data.run.output;
 
         set({
@@ -146,7 +137,7 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
           },
         });
       } catch (error) {
-        console.log("Error running code:", error);
+        console.error("Error running code:", error);
         set({
           error: "Error running code",
           executionResult: { code, output: "", error: "Error running code" },

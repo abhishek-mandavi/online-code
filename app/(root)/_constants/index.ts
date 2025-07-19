@@ -423,13 +423,11 @@ export const THEME_DEFINITONS = {
 export const defineMonacoThemes = (monaco: Monaco) => {
   Object.entries(THEME_DEFINITONS).forEach(([themeName, themeData]) => {
     monaco.editor.defineTheme(themeName, {
-      base: themeData.base,
+      base: themeData.base as Parameters<Monaco["editor"]["defineTheme"]>[1]["base"],
       inherit: themeData.inherit,
-      rules: themeData.rules.map((rule) => ({
-        ...rule,
-        foreground: rule.foreground,
-      })),
+      rules: themeData.rules,
       colors: themeData.colors,
     });
   });
 };
+
